@@ -92,7 +92,7 @@ typedef struct mqtt_client {
   mqtt_call loop;
   mqtt_auth *auth;
   mqtt_lwt *lwt;
-  mqtt_event *evt;
+  mqtt_events *evt;
 
   mqtt_connect_info_t connect_info;
   mqtt_state_t mqtt_state;
