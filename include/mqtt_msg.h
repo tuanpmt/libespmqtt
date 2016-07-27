@@ -1,8 +1,7 @@
-
 #ifndef MQTT_MSG_H
-#define	MQTT_MSG_H
+#define MQTT_MSG_H
 #include "c_types.h"
-#ifdef	__cplusplus
+#ifdef  __cplusplus
 extern "C" {
 #endif
 
@@ -36,9 +35,9 @@ extern "C" {
 * POSSIBILITY OF SUCH DAMAGE.
 *
 */
-/* 7			6			5			4			3			2			1			0*/
-/*|      --- Message Type----			|  DUP Flag	|	   QoS Level		|	Retain	|
-/*										Remaining Length								 */
+/* 7      6     5     4     3     2     1     0*/
+/*|      --- Message Type----     |  DUP Flag |    QoS Level    | Retain  |
+/*                    Remaining Length                 */
 
 
 enum mqtt_message_type
@@ -115,9 +114,9 @@ mqtt_message_t* ICACHE_FLASH_ATTR mqtt_msg_pingresp(mqtt_connection_t* connectio
 mqtt_message_t* ICACHE_FLASH_ATTR mqtt_msg_disconnect(mqtt_connection_t* connection);
 
 
-#ifdef	__cplusplus
+#ifdef  __cplusplus
 }
 #endif
 
-#endif	/* MQTT_MSG_H */
+#endif  /* MQTT_MSG_H */
 

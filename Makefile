@@ -10,13 +10,17 @@ PROTOCOL_VER31 ?= 0
 
 #For FreeRTOS
 MQTT_STACKSIZE ?= 2048
+
 #Auto-detect ESP32 build if not given.
-ifneq (,$(wildcard $(SDK_PATH)/include/esp32))
-ESP32 ?= yes
-FREERTOS ?= yes
-else
+
 ESP32 ?= no
 FREERTOS ?= no
+
+ifeq ("$(ESP32)","yes")
+FREERTOS = yes
+SDK_BASE	?= /tools/esp32/sdk/ESP32_RTOS_SDK
+else
+SDK_BASE	?= /tools/esp8266/sdk/ESP8266_NONOS_SDK
 endif
 
 # Output directors to store intermediate compiled files
@@ -29,11 +33,7 @@ XTENSA_TOOLS_ROOT ?=
 
 # base directory of the ESP8266 SDK package, absolute
 # Only used for the non-FreeRTOS build
-SDK_BASE	?= /tools/esp8266/sdk/ESP8266_NONOS_SDK_V2.0.0_16_07_19
 
-# Base directory of the ESP8266 FreeRTOS SDK package, absolute
-# Only used for the FreeRTOS build
-SDK_PATH	?= /tool/esp8266/sdk/ESP8266_RTOS_SDK
 
 
 # name for the target project
@@ -46,7 +46,7 @@ EXTRA_INCDIR	= ./include \
 
 
 # compiler flags using during compilation of source files
-CFLAGS	= -Os -ggdb -std=c99 -Werror -Wpointer-arith -Wundef -Wall -Wno-comment -Wl,-EL -fno-inline-functions \
+CFLAGS	= -Os -ggdb -std=c99 -Wunused-variable -Wimplicit-function-declaration -Wpointer-arith -Wundef -Wno-comment -Wl,-EL -fno-inline-functions \
 		-nostdlib -mlongcalls -mtext-section-literals  -D__ets__ -DICACHE_FLASH \
 		-Wno-address -DMQTT_STACKSIZE=$(MQTT_STACKSIZE) -DPROTOCOL_NAMEv31
 
@@ -125,26 +125,6 @@ vecho := @echo
 endif
 
 
-ifneq ("$(FREERTOS)","yes")
-ifeq ("$(USE_OPENSDK)","yes")
-CFLAGS		+= -DUSE_OPENSDK
-else
-CFLAGS		+= -D_STDINT_H
-endif
-endif
-
-ifeq ("$(GZIP_COMPRESSION)","yes")
-CFLAGS		+= -DGZIP_COMPRESSION
-endif
-
-ifeq ("$(USE_HEATSHRINK)","yes")
-CFLAGS		+= -DESPFS_HEATSHRINK
-endif
-
-ifeq ("$(HTTPD_WEBSOCKETS)","yes")
-CFLAGS		+= -DHTTPD_WEBSOCKETS
-endif
-
 vpath %.c $(SRC_DIR)
 
 define compile-objects
@@ -155,7 +135,13 @@ endef
 
 .PHONY: all checkdirs clean webpages.espfs submodules
 
-all: checkdirs $(LIB)
+all: info checkdirs $(LIB)
+
+info:
+	$(vecho) "==================================================="
+	$(vecho) "= Compile for ESP32=$(ESP32), FreeRTOS=$(FREERTOS)\t\t  ="
+	$(vecho) "= Tool: $(CC)\t\t\t  ="
+	$(vecho) "==================================================="
 
 $(LIB): $(BUILD_DIR) $(OBJ)
 	$(vecho) "AR $@"
