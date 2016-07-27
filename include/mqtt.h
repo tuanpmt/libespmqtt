@@ -54,7 +54,8 @@ typedef struct mqtt_state_t
 
 
 
-typedef void (*mqtt_event_call)(void *args);
+typedef void (*mqtt_call)(void *args);
+typedef void (*mqtt_event_cb)(void *args);
 
 
 typedef struct {
@@ -73,18 +74,22 @@ typedef struct {
 } mqtt_lwt;
 
 typedef struct {
-  int connected;
-} mqtt_event;
+  mqtt_event_cb subscribed;
+  mqtt_event_cb published;
+  mqtt_event_cb data;
+  mqtt_event_cb connected;
+  mqtt_event_cb disconnected;
+} mqtt_events;
 
 typedef struct mqtt_client {
   struct mqtt_client *self;
-  mqtt_event_call input;
-  mqtt_event_call tick;
-  mqtt_event_call end;
-  mqtt_event_call subscribe;
-  mqtt_event_call unsubscribe;
-  mqtt_event_call publish;
-  mqtt_event_call loop;
+  mqtt_call input;
+  mqtt_call tick;
+  mqtt_call end;
+  mqtt_call subscribe;
+  mqtt_call unsubscribe;
+  mqtt_call publish;
+  mqtt_call loop;
   mqtt_auth *auth;
   mqtt_lwt *lwt;
   mqtt_event *evt;
@@ -93,6 +98,6 @@ typedef struct mqtt_client {
   mqtt_state_t mqtt_state;
 } mqtt_client;
 
-mqtt_client *mqtt_create(mqtt_auth *auth, mqtt_lwt *lwt, mqtt_event *evt);
+mqtt_client *mqtt_create(mqtt_auth *auth, mqtt_lwt *lwt, mqtt_events *evt);
 
 #endif
