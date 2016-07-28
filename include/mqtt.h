@@ -76,9 +76,10 @@ typedef struct {
 typedef struct {
   mqtt_event_cb subscribed;
   mqtt_event_cb published;
-  mqtt_event_cb data;
+  mqtt_event_cb received;
   mqtt_event_cb connected;
   mqtt_event_cb disconnected;
+  mqtt_event_cb output;
 } mqtt_events;
 
 typedef struct mqtt_client {
@@ -90,6 +91,7 @@ typedef struct mqtt_client {
   mqtt_call unsubscribe;
   mqtt_call publish;
   mqtt_call loop;
+  mqtt_call connect;
   mqtt_auth *auth;
   mqtt_lwt *lwt;
   mqtt_events *evt;

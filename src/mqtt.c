@@ -2,7 +2,7 @@
 * @Author: Tuan PM
 * @Date:   2016-07-26 20:26:20
 * @Last Modified by:   Tuan PM
-* @Last Modified time: 2016-07-27 10:52:52
+* @Last Modified time: 2016-07-28 21:12:00
 */
 
 #include "mqtt.h"
@@ -32,6 +32,11 @@ void mqtt_end(void *args)
 
 }
 void mqtt_input(void *args)
+{
+
+}
+
+void mqtt_connect(void *args)
 {
 
 }
@@ -69,6 +74,10 @@ mqtt_client *mqtt_create(mqtt_auth *auth, mqtt_lwt *lwt, mqtt_events *evt)
   client->unsubscribe = mqtt_unsubscribe;
   client->publish = mqtt_publish;
   client->loop = mqtt_loop;
+  client->connect = mqtt_connect;
+
   /* events */
+
+
 
 }
